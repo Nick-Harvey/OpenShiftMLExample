@@ -1,23 +1,21 @@
-FROM ubuntu:14.04
+FROM centos:latest
 
-MAINTAINER Craig Citro <craigcitro@google.com>
+#Update centos 
+RUN yum update -y
 
-# Pick up some TF dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
+#Install Dependencies
+RUN yum groupinstall 'Development Tools' -y
+RUN yum install -y \
         curl \
-        libfreetype6-dev \
-        libpng12-dev \
-        libzmq3-dev \
-        pkg-config \
+        freetype-devel \
+        libpng12-devel \
+        pkgconfig \
         python \
-        python-dev \
+        python-devel \
         rsync \
-        software-properties-common \
         unzip \
         && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+        yum clean all -y
 
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
@@ -42,7 +40,8 @@ RUN pip --no-cache-dir install \
 
 # Install TensorFlow CPU version from central repo
 RUN pip --no-cache-dir install \
-    http://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.0.0-cp27-none-linux_x86_64.whl
+    http://storage.googleapis.com/tensorflow/linux/gpu/tensorflow-0.11.0rc0-cp27-none-linux_x86_64.whl
+#http://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.0.0-cp27-none-linux_x86_64.whl
 # --- ~ DO NOT EDIT OR DELETE BETWEEN THE LINES --- #
 
 # RUN ln -s /usr/bin/python3 /usr/bin/python#
